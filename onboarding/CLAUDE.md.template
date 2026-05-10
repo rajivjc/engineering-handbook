@@ -1,0 +1,75 @@
+# {{PROJECT_NAME}} — CLAUDE.md
+
+Tactical reference for Claude Code at session startup. Everything here is a hard rule that future sessions need at glance. For rationale, history, and full pattern catalogues, see [the Engineering Handbook](https://github.com/rajivjc/engineering-handbook) and project-specific `docs/`.
+
+## Project overview
+
+{{TODO: one paragraph describing what this project is, who it's for, and what shipped state looks like. Keep it under five sentences. The agent reads this at session start to understand the project's reason for existing; if it can't figure out what to optimize for after reading, the paragraph is too vague.}}
+
+## Tech stack
+
+{{TODO: list with versions from package.json. Pin major versions explicitly so the agent doesn't reach for newer-API patterns that don't apply to this codebase. Example shape:
+
+- Next.js (App Router) — version
+- React — version
+- TypeScript — version
+- Postgres / Supabase — version
+- Vitest, Playwright, Tailwind, etc. — versions
+- Hosting: Vercel / Fly / etc.
+
+If a major version is older than 18 months and you're deliberately not upgrading, note the reason here so the agent doesn't propose the upgrade as part of an unrelated session.
+}}
+
+## Mandatory verification sequence (before any commit)
+
+```bash
+npx tsc --noEmit
+npm run build
+npm run lint
+npx vitest run
+```
+
+All four must be green. `tsc --noEmit` is non-negotiable: vitest transpiles via esbuild without type-checking, and `next build` doesn’t type-check files outside the app’s import graph. Test files routinely escape both — only `tsc` catches type drift in tests.
+
+## Architecture patterns
+
+Hard rules — not suggestions. See linked handbook entries for rationale.
+
+- **Mock/real parity.** Every data-layer function in `src/lib/data/` (and module data layers) branches on `isSupabaseConfigured()`. Both branches must be implemented and kept in sync. New features ship working in both modes. See [`principles/mock-real-parity.md`](https://github.com/rajivjc/engineering-handbook/blob/main/principles/mock-real-parity.md).
+- **Server actions formula.** Every server action follows the same shape, in this order: `authn` (resolve user) → `authz` (role check) → `validate` (zod or equivalent) → `call` (data layer or RPC) → `revalidate` (path/tag) → `return` (typed result). No exceptions; if a step doesn’t apply, the missing step is a deliberate decision worth a comment.
+- **Defense-in-depth authorization.** Three layers: route-level (layout guards), server-side (action role checks), and database-level (RLS policies). All three apply to every state-changing endpoint. See [`principles/defense-in-depth-authorization.md`](https://github.com/rajivjc/engineering-handbook/blob/main/principles/defense-in-depth-authorization.md).
+- **Atomic state via RPC.** Multi-row mutations live inside a Postgres function called from a server action. No application-level multi-step mutations. See [`principles/atomic-state.md`](https://github.com/rajivjc/engineering-handbook/blob/main/principles/atomic-state.md).
+- **Role hierarchy.** {{TODO: list roles in this project, highest privilege first. Example: `owner` > `manager` > `staff` > `member`. Document inheritance rules: does `owner` automatically grant all lower roles' permissions, or are roles disjoint?}}
+- **Timezone.** {{TODO: project timezone (e.g., `Asia/Singapore`). All date/time math in the data layer must use this zone explicitly. No `new Date()` without timezone handling. A convention guard test fails CI if a bare `new Date()` appears in `src/lib/data/`.}}
+- **`server-only` import rule.** Every file in `src/lib/data/`, `src/lib/auth/`, and any module data layer starts with `import 'server-only'`. A convention guard test fails CI if this is missed. The rule prevents accidentally bundling server credentials or service-role logic into the client.
+- **Naming convention.** {{TODO: snake_case in database / SQL / RPC params; camelCase in TypeScript. Document any deviations here. The data layer is responsible for converting between conventions; surfaces above the data layer see camelCase only.}}
+- **Route groups.** {{TODO: list route groups and what each guards. Example: `app/(staff)` requires staff role; `app/(member)` requires authenticated member; `app/(public)` is unauthenticated. Each route group's `layout.tsx` enforces its guard via redirect.}}
+
+## Module boundaries
+
+{{TODO: If this project has modules with declared boundaries, list them here. Each module: name, location, lift-out-able vs host-folded, prefix conventions, where the boundary test lives. If the project has no modules yet, leave this section with a single line ("No modules declared.") and revisit when the first one shows up.
+
+Example shape:
+
+- `src/competitions/` — lift-out-able. Tables prefixed `competition_*`. Audit events prefixed `competition.*`. Boundary test: `tests/competitions/boundary.test.ts`. Allow-listed integration files: `data/players.ts` (identity adapter), `audit.ts` (audit wrapper), `events.ts` (event hook).
+- `src/scheduling/` — host-folded. No boundary test. Tables prefixed `schedule_*` for searchability only. Imports flow freely between this module and the host.
+
+If you upgrade a host-folded module to lift-out-able, do it as its own session. Adding a boundary test to a module that's already deeply coupled is harder than adding one to a fresh module — see [`principles/module-boundary-discipline.md`](https://github.com/rajivjc/engineering-handbook/blob/main/principles/module-boundary-discipline.md).
+}}
+
+## Hard test rules
+
+- **RLS NULL-coalescence rule.** Every RLS `USING` and `WITH CHECK` clause must coalesce role-check results (e.g., `coalesce(public.get_user_role(), '')`). A bare `public.get_user_role() = 'manager'` evaluates to NULL when the function returns NULL, and Postgres treats `NULL = anything` as NULL — which the policy may accept depending on the operator. The convention guard regex must match the function name in *every* OR-branch of the clause, not just somewhere in the clause text. See handbook `patterns/web/rls-null-coalescence-guard.md`.
+- **Proxy-on-mutation-target rule.** Atomicity tests must throw from inside the database client, not from the function-call boundary. A throw at the call boundary doesn’t engage the rollback path because no mutation has happened yet. Use a Proxy that intercepts the actual mutation method (e.g., `from(...).update(...)` rather than the action wrapper). See handbook `patterns/test-correctness/proxy-on-mutation-target.md`.
+- **Deliberate-violation verification.** Any institutional-memory test (security guard, atomicity, regression spy) must be exercised by deliberately reverting the fix and confirming the test fails for the right reason. Document the deliberate-violation log in the commit message of the session that adds the test. See [`decisions/examples/deliberate-violation-verification.md`](https://github.com/rajivjc/engineering-handbook/blob/main/decisions/examples/deliberate-violation-verification.md).
+- **Atomic state via Postgres RPC.** Multi-row mutations live inside a Postgres function. Server actions call the RPC and treat the result as success or complete failure. No application-level multi-step mutations, no try/catch-then-cleanup application logic. See [`principles/atomic-state.md`](https://github.com/rajivjc/engineering-handbook/blob/main/principles/atomic-state.md).
+- **Single source of truth for projected values.** When a value flows to multiple surfaces (PDF, CSV, UI, JSON API), it is computed once in a transformer function and consumed by every surface. See [`principles/single-source-of-truth.md`](https://github.com/rajivjc/engineering-handbook/blob/main/principles/single-source-of-truth.md).
+
+## Where to find more
+
+- Project-specific docs: {{TODO: list paths, e.g. `docs/DECISIONS.md`, `docs/SCHEMA.md`, `docs/SESSIONS.md`. The agent should know where the ADR trail and per-session history live.}}
+- Engineering handbook: <https://github.com/rajivjc/engineering-handbook>
+- Principles: <https://github.com/rajivjc/engineering-handbook/tree/main/principles>
+- ADR format and examples: <https://github.com/rajivjc/engineering-handbook/tree/main/decisions>
+- Onboarding templates (this file is one of them): <https://github.com/rajivjc/engineering-handbook/tree/main/onboarding>
+- Patterns (Sessions 2A/2B): <https://github.com/rajivjc/engineering-handbook/tree/main/patterns>
