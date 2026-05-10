@@ -1,0 +1,36 @@
+# AGENTS.md
+
+This file flags agent-specific gotchas for `{{PROJECT_NAME}}`. Read at session start. For project conventions and discipline, see `CLAUDE.md`.
+
+## Framework version warnings
+
+{{TODO: If your project uses a framework with significant version drift from common training data (e.g., Next.js 14+ App Router, React 19, Tailwind 4), include a brief warning here.
+
+Example shape:
+
+- **Next.js 14 App Router.** `cookies()`, `headers()`, and `draftMode()` are *synchronous* in Next 14. They become async in Next 15+. Do not `await` them in this codebase. Read `next/headers` types before writing.
+- **React 19.** Server Components are the default. Client Components are opt-in via `'use client'`. `useFormState` is now `useActionState`.
+- **Tailwind 4.** Configuration is via `@theme` in CSS, not `tailwind.config.js`. Do not introduce a JS config file.
+}}
+
+## Common agent mistakes for this project
+
+{{TODO: List 1–3 things the agent has gotten wrong before. Concrete, named, with the correction.
+
+Example shape:
+
+- **Don’t reach for `lodash`.** This project uses native ES utilities. The build budget is tight; adding 70KB for a `groupBy` is not acceptable.
+- **Don’t use `any`.** `tsc --noEmit` runs in CI with `noImplicitAny`. Use `unknown` and narrow, or write the type.
+- **Don’t synthesize migrations from scratch.** Use `npx supabase migration new {{name}}` and let the tooling generate the file. Hand-rolling the timestamp prefix breaks ordering on collaborators’ machines.
+}}
+
+## Tools available beyond the standard set
+
+{{TODO: List any custom CLI commands, generators, or scripts the agent should know about.
+
+Example shape:
+
+- `npm run gen:types` — regenerates `src/lib/database.types.ts` from the live Supabase schema. Run after any migration.
+- `npx tsx scripts/seed-mock-data.ts` — re-seeds the mock fixtures used by `npm run dev` when `SUPABASE_URL` is unset.
+- `npm run audit:rls` — runs the RLS NULL-coalescence guard against current migration files.
+}}
