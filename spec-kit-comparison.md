@@ -57,6 +57,6 @@ If you don’t use Spec-Kit:
 I considered adopting Spec-Kit retroactively for one of my projects (Tigress, a production club management platform). I didn’t, for two reasons:
 
 1. The codebase already had its own SDD discipline — different file names, same shape. Migrating to Spec-Kit was busywork without a clear payoff. The audit findings before and after would have been the same; only the cosmetic structure would change.
-1. Spec-Kit at v0.8 is a moving target with an active issue tracker. For a side project with mid-term commercialization plans, coupling tightly to a pre-1.0 tool felt premature. After 1.0, this calculus changes.
+2. Spec-Kit at v0.8 is a moving target with an active issue tracker. For a side project with mid-term commercialization plans, coupling tightly to a pre-1.0 tool felt premature. After 1.0, this calculus changes.
 
 The handbook is what I extracted instead — the patterns the project produced, generalized for other projects. If you’re starting greenfield and want ergonomics, use Spec-Kit. If you want a stance and the evidence behind it, take the handbook. If you want both, layer them.

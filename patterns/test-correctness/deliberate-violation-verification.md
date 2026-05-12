@@ -14,12 +14,12 @@ This isn’t a hypothetical. Three sessions in a row on a real project shipped t
 For any test that exists to catch a class of bug:
 
 1. Land the test alongside the fix.
-1. Revert the fix (e.g., `git stash` the fix, comment out the corrected logic, or restore the buggy version inline).
-1. Run the test in isolation.
-1. **Confirm the test FAILS — and fails for the right reason.** Read the failure message. It should describe the bug, not a tangentially-related symptom.
-1. Restore the fix.
-1. Run the test again to confirm green.
-1. Document the deliberate-violation pass in the commit message or session notes.
+2. Revert the fix (e.g., `git stash` the fix, comment out the corrected logic, or restore the buggy version inline).
+3. Run the test in isolation.
+4. **Confirm the test FAILS — and fails for the right reason.** Read the failure message. It should describe the bug, not a tangentially-related symptom.
+5. Restore the fix.
+6. Run the test again to confirm green.
+7. Document the deliberate-violation pass in the commit message or session notes.
 
 If the test passes when the fix is reverted, the test is broken. The fix doesn’t ship. Either rewrite the test, change what it asserts, or change the level at which it runs — until it engages with the actual bug.
 

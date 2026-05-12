@@ -24,11 +24,11 @@ Do **not** use when the user wants:
 ## Workflow
 
 1. **Establish scope.** Ask the user (or infer from context) what the session is meant to accomplish. The objective fits in two sentences; if you can't write those two sentences, the scope isn't ready.
-1. **List deliverables.** Identify the concrete output: files to create, files to modify, schema changes, public-facing API surface. Count them. If the count is over ~20 files, suggest splitting into multiple sessions.
-1. **Identify constraints.** Ask: which patterns or conventions must be followed? Which files must NOT be modified? What's the project's testing discipline? Refer to the project's AGENTS.md / CLAUDE.md if present.
-1. **Define verification.** State explicitly what proves the session is done. Usually: the project's verification gate (typecheck + build + lint + tests), plus session-specific checks (new tests exist, deliberate-violation passes performed, cross-references resolve).
-1. **List out-of-scope items.** What this session is *not* doing, even though it could. Include rationale or a forward reference.
-1. **Draft the prompt.** Use the template structure below.
+2. **List deliverables.** Identify the concrete output: files to create, files to modify, schema changes, public-facing API surface. Count them. If the count is over ~20 files, suggest splitting into multiple sessions.
+3. **Identify constraints.** Ask: which patterns or conventions must be followed? Which files must NOT be modified? What's the project's testing discipline? Refer to the project's AGENTS.md / CLAUDE.md if present.
+4. **Define verification.** State explicitly what proves the session is done. Usually: the project's verification gate (typecheck + build + lint + tests), plus session-specific checks (new tests exist, deliberate-violation passes performed, cross-references resolve).
+5. **List out-of-scope items.** What this session is *not* doing, even though it could. Include rationale or a forward reference.
+6. **Draft the prompt.** Use the template structure below.
 
 ## Template
 

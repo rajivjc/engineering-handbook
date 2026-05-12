@@ -90,7 +90,7 @@ The code was textbook N+1. `Promise.all(posts.map(async (post) => ...))` looks p
 Two contributing factors:
 
 1. **The helpers (`getUser`, `countLikes`, etc.) were pure functions that fetched one item at a time.** They were correct in isolation; they had unit tests; they were used in many other places. Each one was fine.
-1. **The composer (`getFeed`) didn't have an N+1 test.** It was a new function; the project's `n-plus-1-spy-regression-guards` pattern requires every list-returning function to have a spy test. The developer missed it.
+2. **The composer (`getFeed`) didn't have an N+1 test.** It was a new function; the project's `n-plus-1-spy-regression-guards` pattern requires every list-returning function to have a spy test. The developer missed it.
 
 ## The fix
 
@@ -161,8 +161,8 @@ A deliberate-violation pass: revert one of the batched calls to its per-item for
 ## What got better afterward
 
 1. **The spy test became a convention.** Every new list-returning function in the data layer ships with an N+1 spy test alongside its unit tests. Code review enforces; convention guard test grep-checks for missing spies.
-1. **The single-item helpers were complemented by batch helpers.** `getUser` (one) and `getUsersByIds` (many) coexist. Most callers use the batch form; single-item form remains for genuinely-one-at-a-time cases. Naming convention surfaces the difference.
-1. **The page load budget became explicit.** "Feed page server-side processing must be under 500ms for typical input" was added to the performance budget docs. The spy test indirectly enforces by capping query count.
+2. **The single-item helpers were complemented by batch helpers.** `getUser` (one) and `getUsersByIds` (many) coexist. Most callers use the batch form; single-item form remains for genuinely-one-at-a-time cases. Naming convention surfaces the difference.
+3. **The page load budget became explicit.** "Feed page server-side processing must be under 500ms for typical input" was added to the performance budget docs. The spy test indirectly enforces by capping query count.
 
 ## Lessons
 

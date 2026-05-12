@@ -139,9 +139,9 @@ The policy guard test that was supposed to catch this was passing because it onl
 The fix:
 
 1. Strengthen the test to parse the policy condition into AST-like form (or use a regex that catches OR-branched bare references specifically).
-1. Add a deliberate-violation pass to the test setup: write a known-leaky policy in a test fixture, confirm the test catches it.
-1. Audit existing policies for the pattern; rewrite any that have the same shape.
-1. Document this as a pattern (this file).
+2. Add a deliberate-violation pass to the test setup: write a known-leaky policy in a test fixture, confirm the test catches it.
+3. Audit existing policies for the pattern; rewrite any that have the same shape.
+4. Document this as a pattern (this file).
 
 The case study with full incident details is in `case-studies/01-security-rls-leak.md` (coming in Session 3).
 
@@ -172,8 +172,8 @@ Run a deliberate-violation pass on the test:
      using (get_user_role() = 'manager' or kind = 'public');
    ```
 1. Run the test. Confirm it fails with a message naming this policy.
-1. Remove the unsafe policy. Confirm green.
-1. Add a policy that uses coalesce:
+2. Remove the unsafe policy. Confirm green.
+3. Add a policy that uses coalesce:
    
    ```sql
    create policy "deliberately_safe" on test_records for update

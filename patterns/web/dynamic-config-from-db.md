@@ -196,10 +196,10 @@ The test fires on any new hardcoded value. Allow-list entries require justificat
 The “later” version requires:
 
 1. Find every hardcoded value (47 places).
-1. Add a config provider.
-1. Update each hardcoded value to read from config.
-1. Test the migration; confirm no behaviour changed.
-1. Add the convention guard.
+2. Add a config provider.
+3. Update each hardcoded value to read from config.
+4. Test the migration; confirm no behaviour changed.
+5. Add the convention guard.
 
 Doing this proactively requires only step 5, plus the small infrastructure of the provider. The cost is upfront and small. The cost of doing it later is large and recurring (you’ll catch new hardcoded values for months as you discover them).
 

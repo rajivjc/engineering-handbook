@@ -88,11 +88,11 @@ export async function POST(request: NextRequest) {
 The shape:
 
 1. Verify the signature (Stripe gives you tools for this; use them).
-1. Try to insert an audit row keyed on the event ID. The unique constraint enforces dedup.
-1. If the insert fails with unique_violation, the event has been seen — return 200, don’t process.
-1. If the insert succeeds, process the event.
-1. If processing succeeds, return 200.
-1. If processing fails — see the discipline below.
+2. Try to insert an audit row keyed on the event ID. The unique constraint enforces dedup.
+3. If the insert fails with unique_violation, the event has been seen — return 200, don’t process.
+4. If the insert succeeds, process the event.
+5. If processing succeeds, return 200.
+6. If processing fails — see the discipline below.
 
 ## What about retries after partial success?
 
@@ -160,9 +160,9 @@ Two parallel deliveries both find no existing audit row, both process, both inse
 Test cases:
 
 1. **Single delivery happy path.** Deliver event X; assert row inserted, processing ran, response 200.
-1. **Duplicate delivery.** Deliver event X; let it complete. Deliver X again; assert no second row insert, no second processing run, response 200.
-1. **Concurrent delivery.** Deliver X twice in parallel; assert exactly one row, exactly one processing run, both responses 200.
-1. **Processing failure.** Deliver event Y; mock the processor to throw. Assert row IS inserted, response 500. Re-deliver Y; assert no second processing attempt, response 200.
+2. **Duplicate delivery.** Deliver event X; let it complete. Deliver X again; assert no second row insert, no second processing run, response 200.
+3. **Concurrent delivery.** Deliver X twice in parallel; assert exactly one row, exactly one processing run, both responses 200.
+4. **Processing failure.** Deliver event Y; mock the processor to throw. Assert row IS inserted, response 500. Re-deliver Y; assert no second processing attempt, response 200.
 
 The third test is the load-bearing one. It’s also the hardest — you need to actually drive concurrent requests against the endpoint. Integration tests against a real database catch this; unit tests with a mocked database client don’t.
 

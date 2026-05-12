@@ -10,9 +10,9 @@ A test that’s supposed to catch a class of bug only earns trust if you can sho
 For any institutional-memory work — security guards, atomicity tests, regression spies — the audit step **must** include a deliberate-violation pass:
 
 1. Revert the fix you just landed.
-1. Run the test.
-1. Confirm it fails — and fails for the right reason.
-1. Restore the fix.
+2. Run the test.
+3. Confirm it fails — and fails for the right reason.
+4. Restore the fix.
 
 If the test passes when the fix is reverted, the test is wrong. The fix doesn’t ship until the test is genuinely engaging. The deliberate-violation step is documented in the commit message of any institutional-memory work.
 

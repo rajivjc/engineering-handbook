@@ -9,9 +9,9 @@ This document is calibrated to web-app LLM proxies (a Next.js or similar app cal
 For every LLM-using endpoint in your project:
 
 1. Walk LLM01 through LLM10 below.
-1. For each, identify which handbook patterns apply.
-1. Confirm those patterns are implemented and tested.
-1. For risks not addressed by any pattern, decide: implement an ad-hoc mitigation, accept the risk (with rationale, written into an ADR), or remove the feature.
+2. For each, identify which handbook patterns apply.
+3. Confirm those patterns are implemented and tested.
+4. For risks not addressed by any pattern, decide: implement an ad-hoc mitigation, accept the risk (with rationale, written into an ADR), or remove the feature.
 
 The output of the walk is a one-page summary listing each category and its status. Refresh on every significant feature change.
 

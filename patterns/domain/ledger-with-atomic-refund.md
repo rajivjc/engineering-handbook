@@ -185,8 +185,8 @@ The `paired_ledger_id` column is the load-bearing piece. It makes “is this boo
 You could store refunds in a separate table. The pairing approach has three advantages:
 
 1. **The balance is one query.** `select sum(amount) from credit_ledger where user_id = X` produces the truth. No joining across tables.
-1. **The audit trail is one table.** Every credit movement is in `credit_ledger`, in chronological order. Filing this in two tables makes “what happened to this user’s credits?” a multi-table reconstruction.
-1. **Refunds reference originals explicitly.** “Find all refunds” is `where paired_ledger_id is not null`. “Find unrefunded spends” is `select id from credit_ledger where amount < 0 and not exists (select 1 from credit_ledger r where r.paired_ledger_id = credit_ledger.id)`. Both are simple.
+2. **The audit trail is one table.** Every credit movement is in `credit_ledger`, in chronological order. Filing this in two tables makes “what happened to this user’s credits?” a multi-table reconstruction.
+3. **Refunds reference originals explicitly.** “Find all refunds” is `where paired_ledger_id is not null`. “Find unrefunded spends” is `select id from credit_ledger where amount < 0 and not exists (select 1 from credit_ledger r where r.paired_ledger_id = credit_ledger.id)`. Both are simple.
 
 ## Anti-patterns
 
@@ -214,14 +214,14 @@ You could store refunds in a separate table. The pairing approach has three adva
 For the spend path:
 
 1. Happy path: insufficient balance → returns `insufficient_credits`, no booking, no ledger row.
-1. Happy path: sufficient balance → booking created, ledger row created, balance reduced.
-1. Concurrency: two parallel calls with just-enough balance for one of them — exactly one succeeds, balance correct after.
+2. Happy path: sufficient balance → booking created, ledger row created, balance reduced.
+3. Concurrency: two parallel calls with just-enough balance for one of them — exactly one succeeds, balance correct after.
 
 For the refund path:
 
 1. Refund a valid booking → ledger row inserted, paired_ledger_id matches the original, balance restored.
-1. Refund an already-refunded booking → returns `already_refunded`, no second row.
-1. Concurrent double-click on refund button → exactly one refund row inserted (use the unique index on paired_ledger_id).
+2. Refund an already-refunded booking → returns `already_refunded`, no second row.
+3. Concurrent double-click on refund button → exactly one refund row inserted (use the unique index on paired_ledger_id).
 
 The third test in each set is the load-bearing concurrency check. Use the proxy-on-mutation-target pattern (or real database integration tests) to engage with the actual locking and uniqueness behavior.
 

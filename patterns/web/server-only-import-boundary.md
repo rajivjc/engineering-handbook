@@ -128,14 +128,14 @@ What *doesn’t* go in server-only directories: utility functions used by both s
 Run a deliberate-violation pass:
 
 1. Add a new file under `src/lib/data/` *without* the `server-only` import.
-1. Run the test. Confirm it fails with a message naming the file.
-1. Add the import. Confirm green.
+2. Run the test. Confirm it fails with a message naming the file.
+3. Add the import. Confirm green.
 
 For the bundler-level defense:
 
 1. Add an `'use client'` component that imports a `lib/data/` function.
-1. Run `npm run build`. Confirm the build fails with a server-only import violation.
-1. Remove the import. Confirm the build passes.
+2. Run `npm run build`. Confirm the build fails with a server-only import violation.
+3. Remove the import. Confirm the build passes.
 
 This proves both layers engage with real misuse.
 

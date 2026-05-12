@@ -72,7 +72,7 @@ Periodically (every few months, or at phase boundaries), archive older handovers
 Two reasonable choices:
 
 1. **In the chat or notes app where you work.** Lower friction. Easier to write. Doesn’t survive losing access to the chat / app. Suitable for solo work where you’re confident the chat history is preserved.
-1. **In the repo, at `docs/_handovers/NN-summary.md`.** Higher friction. Survives the chat going away. Required for team projects.
+2. **In the repo, at `docs/_handovers/NN-summary.md`.** Higher friction. Survives the chat going away. Required for team projects.
 
 Pick one and stick with it. Mixing creates the worst of both worlds: handovers some places and not others, future readers don’t know where to look.
 

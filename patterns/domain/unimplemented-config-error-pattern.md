@@ -10,7 +10,7 @@ A league management module supports many possible configurations: round-robin or
 Two anti-patterns appear when scope is forced into the first ship:
 
 1. **Hardcode the one supported config.** “We’ll only do single round-robin with 3-1-0 scoring.” Six months later, a customer asks for double round-robin. Now you’re refactoring the league engine while the customer waits.
-1. **Build the entire abstraction with stub implementations.** Every code path checks 47 config values; most return placeholder behavior; tests cover the path you actually use; the rest is dead code that pretends to work.
+2. **Build the entire abstraction with stub implementations.** Every code path checks 47 config values; most return placeholder behavior; tests cover the path you actually use; the rest is dead code that pretends to work.
 
 The middle ground: model the *full* configuration space in the schema and types, but explicitly reject configurations the engine doesn’t yet support. New configurations are unlocked one at a time, each with a deliberate decision and a real implementation.
 
@@ -145,10 +145,10 @@ For typed-language ecosystems (TypeScript, Java, Rust), this pattern is mandator
 The discipline is “one supported configuration per session.” Adding double-round-robin:
 
 1. The session’s spec names the new combination explicitly.
-1. The implementation handles the new path everywhere — fixtures generator, standings computer, schedule renderer, etc.
-1. Tests cover the new combination’s behavior end to end.
-1. A new entry is added to `SUPPORTED_CONFIGS` matching exactly the new combination.
-1. The deliberate-violation pass: try a configuration *just past* the new one (e.g., double-round-robin + handicap if handicap is still unsupported); confirm the error fires.
+2. The implementation handles the new path everywhere — fixtures generator, standings computer, schedule renderer, etc.
+3. Tests cover the new combination’s behavior end to end.
+4. A new entry is added to `SUPPORTED_CONFIGS` matching exactly the new combination.
+5. The deliberate-violation pass: try a configuration *just past* the new one (e.g., double-round-robin + handicap if handicap is still unsupported); confirm the error fires.
 
 The audit checks: every entry in `SUPPORTED_CONFIGS` has a matching test that exercises that configuration to completion.
 

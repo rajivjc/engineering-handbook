@@ -178,9 +178,9 @@ This is the leak in its most common form. Every provider detail goes straight to
 For every endpoint that proxies an external API:
 
 1. Trigger each known error class from the upstream (auth fail, rate limit, malformed input, timeout, 5xx).
-1. Inspect the response. Confirm none of the upstream details appear.
-1. Inspect the server log. Confirm the full upstream error is captured.
-1. Run the deliberate-violation pass on the sanitizer test.
+2. Inspect the response. Confirm none of the upstream details appear.
+3. Inspect the server log. Confirm the full upstream error is captured.
+4. Run the deliberate-violation pass on the sanitizer test.
 
 For new endpoints, the sanitizer must be in place *before* the endpoint is exposed. Adding it later means every error before the fix has potentially leaked.
 

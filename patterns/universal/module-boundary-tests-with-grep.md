@@ -172,9 +172,9 @@ For a small module with one contributor and no extraction plans, the grep test i
 After setting up a boundary test, run a deliberate-violation pass:
 
 1. Add an unauthorized import (e.g., a host page importing a module-internal helper directly, not through the adapter).
-1. Run the test. Confirm it fails with a message naming the import.
-1. Remove the violation. Confirm green.
-1. Add an unauthorized import to an allow-listed file. Confirm green (the allow-list works).
+2. Run the test. Confirm it fails with a message naming the import.
+3. Remove the violation. Confirm green.
+4. Add an unauthorized import to an allow-listed file. Confirm green (the allow-list works).
 
 This proves the test catches what it claims to catch. Without the deliberate-violation pass, you have a test that might pass for the wrong reasons.
 

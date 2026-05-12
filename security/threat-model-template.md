@@ -9,10 +9,10 @@ For LLM-specific threats, complement this with `security/owasp-llm-checklist.md`
 ## How to use this template
 
 1. Identify the system you're modeling (one feature, one service, or the whole app).
-1. List the assets — what data and capabilities are at stake.
-1. Draw the trust boundaries — where untrusted input crosses into trusted code, where one user's data crosses into another user's context.
-1. For each boundary, walk STRIDE: enumerate threats, identify mitigations (existing or needed), record accepted risks.
-1. Produce the summary at the bottom — what's mitigated, what's accepted, what's open.
+2. List the assets — what data and capabilities are at stake.
+3. Draw the trust boundaries — where untrusted input crosses into trusted code, where one user's data crosses into another user's context.
+4. For each boundary, walk STRIDE: enumerate threats, identify mitigations (existing or needed), record accepted risks.
+5. Produce the summary at the bottom — what's mitigated, what's accepted, what's open.
 
 The template is most useful when written *before* implementation. It scales down: a 30-minute pass produces a usable threat model for a single feature; a multi-hour pass produces a thorough one for a whole system.
 

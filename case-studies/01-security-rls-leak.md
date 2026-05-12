@@ -71,7 +71,7 @@ The trigger condition wasn't common, but two configurations of malformed JWTs (a
 Two compounding failures:
 
 1. **The RLS policy didn't defend against NULL on either side.** The expression `tenant_id = current_tenant_id()` is unsafe when either side might be NULL. The fix is `coalesce(tenant_id, '') = coalesce(current_tenant_id()::text, '')` or equivalent, which forces a definite TRUE or FALSE — never NULL.
-1. **Legacy data hadn't been backfilled.** Old rows with NULL `tenant_id` should have been migrated to a sentinel value or deleted. They were left in place because "RLS will filter them anyway."
+2. **Legacy data hadn't been backfilled.** Old rows with NULL `tenant_id` should have been migrated to a sentinel value or deleted. They were left in place because "RLS will filter them anyway."
 
 The combination — both sides NULL, three-valued logic, no defensive coalescing — produced the leak. Either failure alone would not have been sufficient.
 
@@ -133,9 +133,9 @@ And then a deliberate-violation pass: remove the coalescing from the policy temp
 ## What got better afterward
 
 1. **The RLS pattern was elevated to a project-wide convention.** Every policy on every table was audited; coalescing added where missing. A convention guard test was added that greps for unsafe RLS expressions in migrations.
-1. **NOT NULL constraints were applied to tenant scoping columns.** A row without a tenant is, by construction, a bug. The database enforces it.
-1. **Application-layer authorization was reinstated as a required layer.** RLS is the last line of defense, not the only one. The session-handler middleware now rejects requests with malformed tenant claims before any handler runs.
-1. **The customer communications and incident-response runbook were updated.** Six weeks of intermittent leakage required notification to affected customers; the team learned how to do that under regulatory time pressure.
+2. **NOT NULL constraints were applied to tenant scoping columns.** A row without a tenant is, by construction, a bug. The database enforces it.
+3. **Application-layer authorization was reinstated as a required layer.** RLS is the last line of defense, not the only one. The session-handler middleware now rejects requests with malformed tenant claims before any handler runs.
+4. **The customer communications and incident-response runbook were updated.** Six weeks of intermittent leakage required notification to affected customers; the team learned how to do that under regulatory time pressure.
 
 ## Lessons
 
