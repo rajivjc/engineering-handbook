@@ -49,11 +49,11 @@ This is the session prompt format used across the projects this handbook is extr
 {{TODO: Numbered list of post-session checks. Always includes the four-step build verification at minimum:
 
 1. `npx tsc --noEmit` is clean.
-1. `npm run build` succeeds.
-1. `npm run lint` is clean.
-1. `npx vitest run` passes.
-1. {{Project-specific check: e.g., manual test of the new flow in mock mode and real mode.}}
-1. {{Project-specific check: e.g., audit-prompt run against the commit yields no critical findings.}}
+2. `npm run build` succeeds.
+3. `npm run lint` is clean.
+4. `npx vitest run` passes.
+5. {{Project-specific check: e.g., manual test of the new flow in mock mode and real mode.}}
+6. {{Project-specific check: e.g., audit-prompt run against the commit yields no critical findings.}}
 }}
 
 ## Commit

@@ -268,20 +268,20 @@ The recursion is bounded by the bracket depth (log₂ of player count). Override
 For first-round generation:
 
 1. 16 players → 8 matches, no byes.
-1. 13 players → 8 matches, 3 of which are byes (bracket_position 1, 2, 3 by convention).
-1. Byes correctly placed for top seeds.
+2. 13 players → 8 matches, 3 of which are byes (bracket_position 1, 2, 3 by convention).
+3. Byes correctly placed for top seeds.
 
 For auto-advance:
 
 1. Both feeder matches complete → next-round match created with both winners.
-1. Only one feeder complete → no next-round match yet.
-1. Bye advances directly: a bye match’s winner triggers advance even with no opponent.
+2. Only one feeder complete → no next-round match yet.
+3. Bye advances directly: a bye match’s winner triggers advance even with no opponent.
 
 For override:
 
 1. Override a played match → cascade reverts next round, no zombie data.
-1. Override a played match whose next round was also played → recursive cascade works.
-1. Override an unplayed match → no cascade needed (no next round exists).
+2. Override a played match whose next round was also played → recursive cascade works.
+3. Override an unplayed match → no cascade needed (no next round exists).
 
 The cascade tests are the highest-risk; they’re the ones most likely to leave the database in an inconsistent state if the recursion is buggy.
 

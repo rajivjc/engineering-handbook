@@ -101,7 +101,7 @@ The three-step server action was non-atomic. There's no SQL transaction wrapping
 Two fixes available:
 
 1. **Pessimistic locking** — start a transaction, `select ... for update` on the user row, then check balance, insert booking, deduct credit. Concurrent calls block until the first one commits. The second one sees the deducted balance and rejects.
-1. **Optimistic atomic operation** — push the entire check-and-deduct into a single Postgres function (RPC) where the database engine guarantees atomicity.
+2. **Optimistic atomic operation** — push the entire check-and-deduct into a single Postgres function (RPC) where the database engine guarantees atomicity.
 
 The team chose option 2 because it generalized — other state changes had the same shape and the RPC pattern was about to be adopted project-wide.
 
@@ -223,9 +223,9 @@ The team also reviewed every server action that had the check-then-mutate shape.
 ## What got better afterward
 
 1. **The atomic-state-via-RPC pattern became the default.** Any server action that reads state and then mutates it gets pushed into a Postgres function. Code review enforces.
-1. **The button-debouncing on the front-end was made consistent.** This was a secondary defense — the *real* fix is server-side atomicity, but reducing the rate of duplicate requests is still worth doing. The shared `useDebouncedAction` hook was added.
-1. **Concurrency tests became part of the discipline.** Every atomic RPC ships with a "fire two requests in parallel; exactly one wins" test. The race might not fail on every run, but with 50 iterations it will.
-1. **Negative balances became impossible at the schema level.** A check constraint on the running balance view was added: `check (sum(amount) >= 0)`. Belt-and-suspenders; the atomic RPC enforces it logically, the constraint enforces it physically.
+2. **The button-debouncing on the front-end was made consistent.** This was a secondary defense — the *real* fix is server-side atomicity, but reducing the rate of duplicate requests is still worth doing. The shared `useDebouncedAction` hook was added.
+3. **Concurrency tests became part of the discipline.** Every atomic RPC ships with a "fire two requests in parallel; exactly one wins" test. The race might not fail on every run, but with 50 iterations it will.
+4. **Negative balances became impossible at the schema level.** A check constraint on the running balance view was added: `check (sum(amount) >= 0)`. Belt-and-suspenders; the atomic RPC enforces it logically, the constraint enforces it physically.
 
 ## Lessons
 

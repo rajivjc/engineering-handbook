@@ -72,8 +72,8 @@ Less common but valid for fast solo iteration. The tradeoff: you lose the per-WI
 A good commit message has three parts:
 
 1. **Subject line.** Short, scannable, follows project convention (e.g., conventional commits: `feat(X): ...` or `chore: ...`). Names the session.
-1. **Body.** What this session did, in 3–6 lines. List the major deliverables (file groups, not every file). State what’s resolved or unblocked.
-1. **Cross-references.** Forward references being resolved, prior sessions being built upon, related issues if any.
+2. **Body.** What this session did, in 3–6 lines. List the major deliverables (file groups, not every file). State what’s resolved or unblocked.
+3. **Cross-references.** Forward references being resolved, prior sessions being built upon, related issues if any.
 
 What’s NOT in the commit message:
 

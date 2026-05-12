@@ -16,9 +16,9 @@ The fix is to encode the rule as a test.
 A convention guard test has four parts:
 
 1. **A set of forbidden patterns.** Strings, regexes, or AST shapes that match the violation.
-1. **An allow-list with reasons.** Every legitimate exception is enumerated with a short justification.
-1. **A grep-like search across the codebase.** Find all matches; subtract allow-listed entries; flag the remainder.
-1. **A clear failure message.** When the test fails, the message tells the contributor exactly what’s wrong and how to fix it.
+2. **An allow-list with reasons.** Every legitimate exception is enumerated with a short justification.
+3. **A grep-like search across the codebase.** Find all matches; subtract allow-listed entries; flag the remainder.
+4. **A clear failure message.** When the test fails, the message tells the contributor exactly what’s wrong and how to fix it.
 
 ```ts
 // tests/conventions/no-hardcoded-timezone.spec.ts
@@ -120,9 +120,9 @@ For the typical case — a string or shape that should never appear in source �
 Add a deliberate-violation step to every convention guard’s setup:
 
 1. Add a known violation to a non-allow-listed file.
-1. Run the test. Confirm it fails with a message identifying the violation.
-1. Remove the violation. Confirm green.
-1. Add the violation to an allow-listed file. Confirm green (the allow-list works).
+2. Run the test. Confirm it fails with a message identifying the violation.
+3. Remove the violation. Confirm green.
+4. Add the violation to an allow-listed file. Confirm green (the allow-list works).
 
 This proves the test engages with real code. Skip this step and you have a guard that might pass for the wrong reasons.
 

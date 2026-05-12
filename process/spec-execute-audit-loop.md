@@ -93,11 +93,11 @@ The pattern: the agent decides *how*; the human (via the spec) decides *what* an
 ## A typical loop
 
 1. Human writes spec for Session N. Posts to chat. Reviews, edits, finalizes.
-1. Spec handed to the agent (often a different chat or a different tool — Claude Code, etc.).
-1. Agent executes. Asks clarifying questions if needed. Produces a single commit. Posts a session summary back.
-1. Human (in chat) audits the diff. Identifies any findings.
-1. If findings are blockers → write fix-up spec → loop. If clean → close session.
-1. Optional: write a handover document (see `patterns/universal/session-handover-discipline.md`) capturing the session’s outcome and what’s next.
+2. Spec handed to the agent (often a different chat or a different tool — Claude Code, etc.).
+3. Agent executes. Asks clarifying questions if needed. Produces a single commit. Posts a session summary back.
+4. Human (in chat) audits the diff. Identifies any findings.
+5. If findings are blockers → write fix-up spec → loop. If clean → close session.
+6. Optional: write a handover document (see `patterns/universal/session-handover-discipline.md`) capturing the session’s outcome and what’s next.
 
 The total time is variable. For a small session, all three phases fit in 30 minutes. For a substantial one, an hour each. The structure is what makes the time spent productive.
 

@@ -130,7 +130,7 @@ create table posts (
 This is wrong for two reasons:
 
 1. **Adding a new author kind requires a schema change.** `author_anonymous_session_id`, `author_external_partner_id` — each needs a new column. The discriminator column scales with no schema change; just a new value.
-1. **Constraints get harder to write.** “Exactly one of N nullable columns is non-null” is a check constraint that must be updated every time N changes. The kind-plus-id pattern uses a single check constraint per kind.
+2. **Constraints get harder to write.** “Exactly one of N nullable columns is non-null” is a check constraint that must be updated every time N changes. The kind-plus-id pattern uses a single check constraint per kind.
 
 The string discriminator is the canonical pattern for this shape; it’s how `polymorphic_type` works in many ORMs and how event-sourced systems represent actor identity.
 

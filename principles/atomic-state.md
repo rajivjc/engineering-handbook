@@ -91,9 +91,9 @@ If anything raises, the whole function rolls back. The application calls it as a
 Some operations span systems: a database mutation plus a Stripe charge plus a push notification. You can’t put a Stripe API call inside a Postgres transaction. The pattern then is:
 
 1. Identify the source-of-truth system. Usually the database.
-1. Make the source-of-truth mutation atomic via the database.
-1. Trigger external side effects after the database transaction commits, with retry / idempotency at each external system.
-1. Accept that “atomic” means “atomic in the source of truth”; reconciliation across systems is a separate problem with its own patterns (see [`patterns/web/stripe-idempotency-via-audit-dedup.md`](../patterns/web/stripe-idempotency-via-audit-dedup.md)).
+2. Make the source-of-truth mutation atomic via the database.
+3. Trigger external side effects after the database transaction commits, with retry / idempotency at each external system.
+4. Accept that “atomic” means “atomic in the source of truth”; reconciliation across systems is a separate problem with its own patterns (see [`patterns/web/stripe-idempotency-via-audit-dedup.md`](../patterns/web/stripe-idempotency-via-audit-dedup.md)).
 
 ## Anti-patterns
 

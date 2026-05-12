@@ -139,8 +139,8 @@ export async function publishWeekAction(weekId: string): Promise<ActionResult> {
 Three things to notice:
 
 1. **Authentication and role check happen at the action layer.** Even though the SQL function also checks the role (defense in depth), the action layer is the first gate.
-1. **Push delivery happens AFTER the database commit.** A push notification fired during the transaction might be sent before the row is actually committed; if the transaction rolls back, the push has already gone out for a state that didn’t happen. Always defer external side effects until after commit. See `fire-and-forget-side-effects` for the full discipline.
-1. **The RPC’s failure modes are typed in the result.** `forbidden`, `week_not_found`, `week_not_draft` — each is a discrete case the action layer can map to a UI error message.
+2. **Push delivery happens AFTER the database commit.** A push notification fired during the transaction might be sent before the row is actually committed; if the transaction rolls back, the push has already gone out for a state that didn’t happen. Always defer external side effects until after commit. See `fire-and-forget-side-effects` for the full discipline.
+3. **The RPC’s failure modes are typed in the result.** `forbidden`, `week_not_found`, `week_not_draft` — each is a discrete case the action layer can map to a UI error message.
 
 ## When this is the right tool
 
@@ -216,9 +216,9 @@ If step 2 fails, steps 1 and 3 might or might not have run. The application has 
 For every RPC, test:
 
 1. **Happy path.** All steps succeed; the function returns ok.
-1. **Each known failure mode.** `forbidden`, `not_found`, etc. — assert the function returns the expected reason without mutating anything.
-1. **Atomicity (using `proxy-on-mutation-target`).** Inject a failure mid-function (or use a database that simulates it), assert that none of the prior steps’ mutations are visible after the rollback.
-1. **Concurrency (using a real database).** Two parallel calls to the RPC; assert that one wins and the other gets a clean failure (not a corrupt state).
+2. **Each known failure mode.** `forbidden`, `not_found`, etc. — assert the function returns the expected reason without mutating anything.
+3. **Atomicity (using `proxy-on-mutation-target`).** Inject a failure mid-function (or use a database that simulates it), assert that none of the prior steps’ mutations are visible after the rollback.
+4. **Concurrency (using a real database).** Two parallel calls to the RPC; assert that one wins and the other gets a clean failure (not a corrupt state).
 
 The third test is what makes this pattern’s atomicity guarantee real. Without it, you’re trusting Postgres’s transaction semantics blindly. Trust is fine; verification is better.
 

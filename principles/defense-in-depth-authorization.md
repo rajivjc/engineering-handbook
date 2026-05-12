@@ -7,8 +7,8 @@ No single authorization layer is enough. A request that mutates state must be au
 For a typical web application with a database:
 
 1. **Database-level authorization** (RLS in Postgres, fine-grained access control elsewhere). Catches: misconfigured server actions, ORM queries that bypass middleware, future changes that introduce new query paths.
-1. **Server-side authorization** (explicit role checks in server actions / API handlers). Catches: misconfigured database policies, schema migrations that drop a policy, queries that run as a service role and need application-level gating.
-1. **Route-level authorization** (middleware or layout guards). Catches: deep-linking to URLs the user shouldn’t see, navigation mistakes that would otherwise reach the action layer.
+2. **Server-side authorization** (explicit role checks in server actions / API handlers). Catches: misconfigured database policies, schema migrations that drop a policy, queries that run as a service role and need application-level gating.
+3. **Route-level authorization** (middleware or layout guards). Catches: deep-linking to URLs the user shouldn’t see, navigation mistakes that would otherwise reach the action layer.
 
 A request must pass all three. Each is fallible alone; the combination is robust.
 

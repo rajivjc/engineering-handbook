@@ -98,8 +98,8 @@ The gate verifies itself. If it exits zero, the session is done; if it exits non
 What you can verify periodically:
 
 1. **Run the gate against a known-bad commit** (deliberately broken types, deliberately failing test). Confirm it fails. If it doesn’t, the gate is broken.
-1. **Audit that all four steps run.** A misconfigured `verify.sh` might silently skip a step; the output should explicitly print “1/4,” “2/4,” etc.
-1. **Audit CI parity.** The gate locally and the gate in CI should produce the same result on the same commit. If they diverge, one is wrong.
+2. **Audit that all four steps run.** A misconfigured `verify.sh` might silently skip a step; the output should explicitly print “1/4,” “2/4,” etc.
+3. **Audit CI parity.** The gate locally and the gate in CI should produce the same result on the same commit. If they diverge, one is wrong.
 
 ## Related
 

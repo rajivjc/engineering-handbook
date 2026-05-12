@@ -158,9 +158,9 @@ Watch the global rate carefully on launch days. A 10x spike that’s legitimate 
 For each layer, write tests that:
 
 1. Confirm the limit fires at the right count.
-1. Confirm requests under the limit pass.
-1. Confirm the layer correctly identifies which limit was hit.
-1. Confirm reset after the window elapses.
+2. Confirm requests under the limit pass.
+3. Confirm the layer correctly identifies which limit was hit.
+4. Confirm reset after the window elapses.
 
 Plus a deliberate-violation pass: temporarily lower the limits to 1, confirm the second request gets a 429 with the right `layer` field. Restore.
 

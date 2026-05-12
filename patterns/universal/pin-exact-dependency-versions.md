@@ -67,11 +67,11 @@ For projects with strict CI policies, this can be enforced: the CI runs `npm ins
 Updates become a workflow:
 
 1. Identify the package(s) you want to update.
-1. Bump the version in the manifest.
-1. Run `npm install` to update the lockfile.
-1. Run the four-step verification gate (typecheck, build, lint, test).
-1. Manual smoke test of the affected feature, if applicable.
-1. Single commit with the bump and the lockfile change.
+2. Bump the version in the manifest.
+3. Run `npm install` to update the lockfile.
+4. Run the four-step verification gate (typecheck, build, lint, test).
+5. Manual smoke test of the affected feature, if applicable.
+6. Single commit with the bump and the lockfile change.
 
 The commit message names what changed and why: `chore(deps): bump stripe from 14.5.0 to 14.6.0 (CVE-2025-XXXX)`.
 

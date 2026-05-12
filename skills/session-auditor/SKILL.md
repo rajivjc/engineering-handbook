@@ -26,8 +26,8 @@ Do **not** use for:
 Before starting the audit, you need:
 
 1. **The commit, PR, or branch** to audit. (A hash, a URL, or "the most recent merge.")
-1. **The spec** the session was executed against. If the user doesn't provide it, ask. Auditing without a spec is just code review.
-1. **Access to the repo.** Either it's already in the working directory, or it needs to be cloned.
+2. **The spec** the session was executed against. If the user doesn't provide it, ask. Auditing without a spec is just code review.
+3. **Access to the repo.** Either it's already in the working directory, or it needs to be cloned.
 
 ## Workflow
 

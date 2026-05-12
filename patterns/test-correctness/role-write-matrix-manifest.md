@@ -16,9 +16,9 @@ Code review catches some of this. Tests catch some of it. The class of bug — *
 For each protected action, declare the expected role(s) explicitly in a manifest. The manifest is the single source of truth for “who can do what.” Tests assert that:
 
 1. Every server action in the manifest has the declared role check at the action layer.
-1. Every server action in the manifest is gated by an RLS policy whose `USING` and `WITH CHECK` clauses match the declared roles.
-1. Every server action in the codebase appears in the manifest. (No undeclared mutations.)
-1. Every RLS policy in the database has a matching action in the manifest. (No orphan policies.)
+2. Every server action in the manifest is gated by an RLS policy whose `USING` and `WITH CHECK` clauses match the declared roles.
+3. Every server action in the codebase appears in the manifest. (No undeclared mutations.)
+4. Every RLS policy in the database has a matching action in the manifest. (No orphan policies.)
 
 The manifest itself looks like:
 

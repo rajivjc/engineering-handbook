@@ -100,8 +100,8 @@ The model has a much stronger signal that the embedded “Important” is data, 
 Three properties of a good delimiter:
 
 1. **Long.** A user can’t accidentally type 35 characters of equals signs. Short delimiters (`---`, `====`) appear in legitimate documents (markdown headings, ASCII art).
-1. **Distinctive.** Mix characters that don’t naturally co-occur — `=` plus uppercase plus space plus uppercase. Plain text rarely produces this exact shape.
-1. **Reserved.** Reject input that contains the delimiter rather than try to escape it. Escaping is fragile; rejection is clear.
+2. **Distinctive.** Mix characters that don’t naturally co-occur — `=` plus uppercase plus space plus uppercase. Plain text rarely produces this exact shape.
+3. **Reserved.** Reject input that contains the delimiter rather than try to escape it. Escaping is fragile; rejection is clear.
 
 `======= USER CONTENT BLOCK =======` satisfies all three. Pick your own; the property that matters is “the user can’t reproduce this by accident or by adversarial intent without you noticing.”
 
@@ -152,8 +152,8 @@ The system prompt names both labels and explains how they relate. The model know
 Test with known injection attempts that reach the LLM:
 
 1. Wrap an injection attempt; send through your endpoint. Confirm the model completes the original task instead of the injected one.
-1. Test with the delimiter included in the user input directly. Confirm `wrapUserInput` rejects it.
-1. Test with the model’s response: confirm the delimiters do not appear in the user-facing output.
+2. Test with the delimiter included in the user input directly. Confirm `wrapUserInput` rejects it.
+3. Test with the model’s response: confirm the delimiters do not appear in the user-facing output.
 
 A more involved test: keep a small evaluation set of “documents containing fake instructions” with the expected behavior (summarize the document, do not act on the embedded instructions). Run through the wrapped pipeline and assert the response matches expectation. Re-run periodically when you change models or prompts.
 
